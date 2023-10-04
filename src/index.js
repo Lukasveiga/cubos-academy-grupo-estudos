@@ -1,30 +1,35 @@
 const express = require("express");
-const cliente = require("./database");
+const clientes = require("./database");
 
 const app = express();
 
 const PORT = 3001;
 
-app.get("/filtro-por-idade/:idade", (requisicao, resposta) => {
-  const { idade } = requisicao.params;
+app.get("/filtro-por-idade/:idade", (req, res) => {
+  const { idade } = req.params;
   const idadeNumero = Number(idade);
 
-  const usuariosFiltrados = cliente.filter((usuario) => usuario.idade >= idadeNumero);
+  const clientesFiltrados = clientes.filter((cliente) => cliente.idade >= idadeNumero);
 
-  return resposta.send(usuariosFiltrados);
+  return res.send(clientesFiltrados);
 });
 
 app.get("/filtro-por-email/:email", (req, res) => {
   const { email } = req.params;
 
-  const usuarioFiltrado = cliente.find((usuario) => usuario.email === email);
+  const clienteFiltrado = clientes.find((cliente) => cliente.email === email);
 
-  if (!usuarioFiltrado) {
-    return res.send("Usuário não foi encontrado.");
+  if (!clienteFiltrado) {
+    return res.send("Cliente não foi encontrado.");
   }
 
-  return res.send(usuarioFiltrado);
+  return res.send(clienteFiltrado);
 });
+
+// TODO: 04/10
+// Rota para adicionar novo campo no objeto usuário/cliente
+// Adicionar parâmetro de query para retornar apenas usuários ativos
+// Verificar se o valor passado como url params é um inteiro
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
